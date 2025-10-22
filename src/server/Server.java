@@ -21,10 +21,10 @@ public class Server {
 					System.out.println("Cliente conectado.");
 					salida = new ObjectOutputStream(cliente.getOutputStream());
 					entrada = new ObjectInputStream(cliente.getInputStream());
-					salida.writeObject("Hola! Introduzca tu nombre de usuario para acceder al chat.");
 					
 					Usuario[] users = new Usuario[10];
-					
+					salida.writeObject("Bienvenid@ a usuario [PH]!.");
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
