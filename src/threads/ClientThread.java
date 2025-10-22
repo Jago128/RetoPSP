@@ -6,4 +6,8 @@ public class ClientThread implements Runnable {
 	public void run() {
 		
 	}
+	
+	synchronized void privateChat() {
+		
+	}
 }

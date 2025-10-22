@@ -3,6 +3,8 @@ package server;
 import java.io.*;
 import java.net.*;
 
+import model.Usuario;
+
 public class Server {
 	private final int PUERTO = 5000;
 
@@ -20,6 +22,8 @@ public class Server {
 					salida = new ObjectOutputStream(cliente.getOutputStream());
 					entrada = new ObjectInputStream(cliente.getInputStream());
 					salida.writeObject("Hola! Introduzca tu nombre de usuario para acceder al chat.");
+					
+					Usuario[] users = new Usuario[10];
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
