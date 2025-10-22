@@ -13,10 +13,12 @@ public class ChatView extends JFrame {
 	private JPanel contentPane;
 	private JTextField textFieldMessage, textFieldNewUser;
 	private Usuario user;
+	private JTextField textFieldSetPuerto;
+	private JTextField textFieldSetIP;
 
 	public ChatView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(100, 100, 550, 450);
+		setBounds(100, 100, 630, 450);
 		contentPane = new JPanel();
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
 		setContentPane(contentPane);
@@ -24,33 +26,62 @@ public class ChatView extends JFrame {
 		
 		JComboBox<String> comboBox = new JComboBox<>();
 		comboBox.setEnabled(false);
-		comboBox.setBounds(27, 90, 348, 27);
+		comboBox.setBounds(27, 80, 256, 27);
 		contentPane.add(comboBox);
 		
 		JButton btnSendMessage = new JButton("Send Message");
 		btnSendMessage.setEnabled(false);
-		btnSendMessage.setBounds(396, 347, 111, 36);
+		btnSendMessage.setBounds(495, 347, 111, 36);
 		contentPane.add(btnSendMessage);
 		
 		textFieldMessage = new JTextField();
 		textFieldMessage.setEnabled(false);
-		textFieldMessage.setBounds(27, 348, 348, 35);
+		textFieldMessage.setBounds(27, 348, 458, 35);
 		contentPane.add(textFieldMessage);
 		textFieldMessage.setColumns(10);
 		
 		JScrollPane scrollPaneMessages = new JScrollPane();
 		scrollPaneMessages.setEnabled(false);
-		scrollPaneMessages.setBounds(27, 127, 496, 197);
+		scrollPaneMessages.setBounds(27, 127, 579, 197);
 		contentPane.add(scrollPaneMessages);
 		
 		textFieldNewUser = new JTextField();
 		textFieldNewUser.setColumns(10);
-		textFieldNewUser.setBounds(27, 32, 348, 35);
+		textFieldNewUser.setBounds(27, 35, 458, 35);
 		contentPane.add(textFieldNewUser);
 		
 		JButton btnCreateUser = new JButton("Create User");
-		btnCreateUser.setBounds(396, 31, 111, 36);
+		btnCreateUser.setBounds(495, 34, 111, 36);
 		contentPane.add(btnCreateUser);
+		
+		textFieldSetPuerto = new JTextField();
+		textFieldSetPuerto.setColumns(10);
+		textFieldSetPuerto.setBounds(526, 80, 80, 27);
+		contentPane.add(textFieldSetPuerto);
+		
+		textFieldSetIP = new JTextField();
+		textFieldSetIP.setColumns(10);
+		textFieldSetIP.setBounds(315, 80, 141, 27);
+		contentPane.add(textFieldSetIP);
+		
+		JLabel lblUsername = new JLabel("Username:");
+		lblUsername.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblUsername.setBounds(27, 10, 111, 15);
+		contentPane.add(lblUsername);
+		
+		JLabel lblSetIP = new JLabel("IP:");
+		lblSetIP.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblSetIP.setBounds(293, 85, 15, 15);
+		contentPane.add(lblSetIP);
+		
+		JLabel lblSetPuerto = new JLabel("Puerto:");
+		lblSetPuerto.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		lblSetPuerto.setBounds(466, 85, 49, 15);
+		contentPane.add(lblSetPuerto);
+		
+		JButton btnDisconnect = new JButton("Disconnect");
+		btnDisconnect.setBounds(495, 3, 111, 27);
+		contentPane.add(btnDisconnect);
 	}
 	
 	public static void main(String[] args) {

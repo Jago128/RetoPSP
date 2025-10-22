@@ -24,6 +24,7 @@ public class Server {
 					salida.writeObject("Hola! Introduzca tu nombre de usuario para acceder al chat.");
 					
 					Usuario[] users = new Usuario[10];
+					
 				} catch (Exception e) {
 					e.printStackTrace();
 				} finally {
