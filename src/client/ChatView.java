@@ -11,10 +11,8 @@ public class ChatView extends JFrame {
 
 	private static final long serialVersionUID = 1L;
 	private JPanel contentPane;
-	private JTextField textFieldMessage, textFieldNewUser;
 	private Usuario user;
-	private JTextField textFieldSetPuerto;
-	private JTextField textFieldSetIP;
+	private JTextField textFieldMessage, textFieldNewUser, textFieldSetPuerto, textFieldSetIP;
 
 	public ChatView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
