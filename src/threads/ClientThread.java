@@ -5,13 +5,11 @@ import java.net.Socket;
 
 import javax.swing.*;
 
-import model.Usuario;
+import model.*;
 
 public class ClientThread implements Runnable {
 
-	private Usuario user1;
-	private Usuario user2;
-	private String message;
+	private Mensaje message;
 	private Socket client;
 	public Thread threadClient;
 	private JList<String> messageList;
@@ -23,14 +21,14 @@ public class ClientThread implements Runnable {
 
 	@Override
 	public void run() {
-		if (user2 != null) {
-			publicChat(user1, message);
+		if (message.getUser2() != null) {
+			publicChat(message);
 		} else {
-			privateChat(user1, user2, message);
+			privateChat(message);
 		}
 	}
 
-	synchronized void publicChat(Usuario user, String message) {
+	synchronized void publicChat(Mensaje message) {
 		boolean sent = true;
 		ObjectOutputStream salida;
 		ObjectInputStream entrada;
@@ -47,6 +45,7 @@ public class ClientThread implements Runnable {
 			try {
 				entrada = new ObjectInputStream(client.getInputStream());
 				String error = (String) entrada.readObject();
+				messages.addElement(error);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
@@ -56,12 +55,17 @@ public class ClientThread implements Runnable {
 			while (messages.contains("[PH]")) {
 				messages.removeElement("[PH]");
 			}
-			messages.addElement(message);
+			
+			while (messages.contains("[PH]")) {
+				messages.removeElement("[PH]");
+			}
+			
+			messages.addElement(message.getMessage());
 			SwingUtilities.invokeLater(() -> messageList.setModel(messages));
 		}
 	}
 
-	synchronized void privateChat(Usuario user1, Usuario user2, String message) {
+	synchronized void privateChat(Mensaje message) {
 		boolean sent = true;
 		ObjectOutputStream salida;
 		ObjectInputStream entrada;
@@ -78,6 +82,7 @@ public class ClientThread implements Runnable {
 			try {
 				entrada = new ObjectInputStream(client.getInputStream());
 				String error = (String) entrada.readObject();
+				messages.addElement(error);
 			} catch (IOException e) {
 				e.printStackTrace();
 			} catch (Exception e) {
@@ -87,31 +92,26 @@ public class ClientThread implements Runnable {
 			while (messages.contains("[PH]")) {
 				messages.removeElement("[PH]");
 			}
-			messages.addElement(message);
+
+			while (messages.contains("[PH]")) {
+				messages.removeElement("[PH]");
+			}
+
+			messages.addElement(message.getMessage());
 			SwingUtilities.invokeLater(() -> messageList.setModel(messages));
 		}
 	}
 
-	public ClientThread(Usuario user, Socket client, JList<String> messageList) {
-		this.user1 = user;
-		this.message = "";
+	public ClientThread(Socket client, JList<String> messageList) {
 		this.client = client;
 		this.messageList = messageList;
 	}
 
-	public String getMessage() {
+	public Mensaje getMessage() {
 		return message;
 	}
 
-	public void setMessage(String message) {
+	public void setMessage(Mensaje message) {
 		this.message = message;
-	}
-
-	public Usuario getUser2() {
-		return user2;
-	}
-
-	public void setUser2(Usuario user2) {
-		this.user2 = user2;
 	}
 }
