@@ -3,9 +3,7 @@ package threads;
 import java.io.*;
 import java.net.Socket;
 
-import javax.swing.DefaultListModel;
-import javax.swing.JList;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 import model.Usuario;
 

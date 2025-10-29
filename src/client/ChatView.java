@@ -55,7 +55,7 @@ public class ChatView extends JFrame implements ActionListener {
 
 		comboBoxUsers = new JComboBox<>();
 		comboBoxUsers.setFont(new Font("Tahoma", Font.PLAIN, 12));
-		comboBoxUsers.setModel(new DefaultComboBoxModel(new String[] {"Public"}));
+		comboBoxUsers.setModel(new DefaultComboBoxModel<>(new String[] {"Public"}));
 		comboBoxUsers.setEnabled(false);
 		comboBoxUsers.setBounds(27, 80, 256, 27);
 		contentPane.add(comboBoxUsers);
@@ -98,8 +98,7 @@ public class ChatView extends JFrame implements ActionListener {
 		
 		messageList = new JList<>();
 		messageList.setBounds(27, 129, 579, 193);
-		DefaultListModel<String> messages = new DefaultListModel<String>();
-		messageList.setModel(messages);
+		messageList.setModel(new DefaultListModel<String>());
 		
 		scrollPaneMessages = new JScrollPane();
 		scrollPaneMessages.setBounds(27, 129, 579, 193);
