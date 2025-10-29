@@ -9,12 +9,14 @@ public class Server {
 	private final int PUERTO = 5000;
 
 	public void iniciar() {
+		Usuario[] users = new Usuario[10];
 		Socket cliente = null;
 		ObjectInputStream entrada = null;
 		ObjectOutputStream salida = null;
 		boolean active = true;
 		try (ServerSocket servidor = new ServerSocket(PUERTO)) {
 			while (active) {
+				
 				System.out.println("Esperando conexiones del cliente...");
 				try {
 					cliente = servidor.accept();
@@ -23,7 +25,7 @@ public class Server {
 					entrada = new ObjectInputStream(cliente.getInputStream());
 					salida.writeObject("Hola! Introduzca tu nombre de usuario para acceder al chat.");
 					
-					Usuario[] users = new Usuario[10];
+					
 					
 				} catch (Exception e) {
 					e.printStackTrace();
