@@ -9,20 +9,20 @@ public class Server {
 	private final int PUERTO = 5000;
 
 	public void iniciar() {
+		Usuario[] users = new Usuario[10];
 		Socket cliente = null;
 		ObjectInputStream entrada = null;
 		ObjectOutputStream salida = null;
 		boolean active = true;
 		try (ServerSocket servidor = new ServerSocket(PUERTO)) {
 			while (active) {
+				
 				System.out.println("Esperando conexiones del cliente...");
 				try {
 					cliente = servidor.accept();
 					System.out.println("Cliente conectado.");
 					salida = new ObjectOutputStream(cliente.getOutputStream());
 					entrada = new ObjectInputStream(cliente.getInputStream());
-					
-					Usuario[] users = new Usuario[10];
 					salida.writeObject("Bienvenid@ a usuario [PH]!.");
 
 				} catch (Exception e) {
