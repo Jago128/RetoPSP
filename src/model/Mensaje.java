@@ -9,6 +9,7 @@ public class Mensaje {
 	public Mensaje(String message, Usuario user1) {
 		this.message = message;
 		this.user1 = user1;
+		this.user2 = new Usuario ("Public");
 		this.chatType = false;
 	}
 
