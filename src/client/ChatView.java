@@ -54,6 +54,8 @@ public class ChatView extends JFrame implements ActionListener {
 		contentPane.add(btnCreateUser);
 
 		comboBoxUsers = new JComboBox<>();
+		comboBoxUsers.setFont(new Font("Tahoma", Font.PLAIN, 12));
+		comboBoxUsers.setModel(new DefaultComboBoxModel(new String[] {"Public"}));
 		comboBoxUsers.setEnabled(false);
 		comboBoxUsers.setBounds(27, 80, 256, 27);
 		contentPane.add(comboBoxUsers);
@@ -96,6 +98,8 @@ public class ChatView extends JFrame implements ActionListener {
 		
 		messageList = new JList<>();
 		messageList.setBounds(27, 129, 579, 193);
+		DefaultListModel<String> messages = new DefaultListModel<String>();
+		messageList.setModel(messages);
 		
 		scrollPaneMessages = new JScrollPane();
 		scrollPaneMessages.setBounds(27, 129, 579, 193);
@@ -148,6 +152,7 @@ public class ChatView extends JFrame implements ActionListener {
 					thread = new ClientThread(user, client, messageList);
 					thread.start();
 					oos.writeObject(user);
+					// e
 				} else {
 					JOptionPane.showMessageDialog(this, "No hay espacio para añadir mas usuarios.", "ERROR", JOptionPane.ERROR_MESSAGE);
 				}
@@ -180,7 +185,7 @@ public class ChatView extends JFrame implements ActionListener {
 
 	public void sendMessage() {
 		thread.setMessage(textFieldMessage.getText());
-		if (!comboBoxUsers.getSelectedItem().equals("Public")) {
+		if (comboBoxUsers.getSelectedItem().equals("Public")) {
 			thread.run();
 		} else {
 			user2 = new Usuario((String) comboBoxUsers.getSelectedItem());

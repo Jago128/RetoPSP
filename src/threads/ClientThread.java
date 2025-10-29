@@ -3,7 +3,9 @@ package threads;
 import java.io.*;
 import java.net.Socket;
 
+import javax.swing.DefaultListModel;
 import javax.swing.JList;
+import javax.swing.SwingUtilities;
 
 import model.Usuario;
 
@@ -34,6 +36,7 @@ public class ClientThread implements Runnable {
 		boolean sent = true;
 		ObjectOutputStream salida;
 		ObjectInputStream entrada;
+		DefaultListModel<String> messages = (DefaultListModel<String>) messageList.getModel();
 
 		try {
 			salida = new ObjectOutputStream(client.getOutputStream());
@@ -51,6 +54,12 @@ public class ClientThread implements Runnable {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		} else {
+			while (messages.contains("[PH]")) {
+				messages.removeElement("[PH]");
+			}
+			messages.addElement(message);
+			SwingUtilities.invokeLater(() -> messageList.setModel(messages));
 		}
 	}
 
@@ -58,6 +67,7 @@ public class ClientThread implements Runnable {
 		boolean sent = true;
 		ObjectOutputStream salida;
 		ObjectInputStream entrada;
+		DefaultListModel<String> messages = (DefaultListModel<String>) messageList.getModel();
 
 		try {
 			salida = new ObjectOutputStream(client.getOutputStream());
@@ -75,6 +85,12 @@ public class ClientThread implements Runnable {
 			} catch (Exception e) {
 				e.printStackTrace();
 			}
+		} else {
+			while (messages.contains("[PH]")) {
+				messages.removeElement("[PH]");
+			}
+			messages.addElement(message);
+			SwingUtilities.invokeLater(() -> messageList.setModel(messages));
 		}
 	}
 

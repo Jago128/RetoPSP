@@ -1,6 +1,7 @@
 package model;
 
 public class Usuario {
+	
 	private String username;
 
 	public Usuario(String username) {
