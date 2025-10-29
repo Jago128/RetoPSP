@@ -2,9 +2,9 @@ package client;
 
 import java.awt.*;
 import java.awt.event.*;
+import java.io.*;
 import java.net.Socket;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.regex.*;
 
 import javax.swing.*;
 import javax.swing.border.*;
@@ -21,9 +21,11 @@ public class ChatView extends JFrame implements ActionListener {
 	private JTextField textFieldMessage, textFieldNewUser, textFieldSetPuerto, textFieldSetIP;
 	private JComboBox<String> comboBoxUsers;
 	private JButton btnSendMessage, btnDisconnect, btnCreateUser;
-	private JScrollPane scrollPaneMessages;
 	private JLabel lblMessage;
 	private Socket client;
+	private ClientThread thread;
+	private JScrollPane scrollPaneMessages;
+	private JList<String> messageList;
 
 	public ChatView() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -76,11 +78,6 @@ public class ChatView extends JFrame implements ActionListener {
 		textFieldSetPuerto.setBounds(526, 80, 80, 27);
 		contentPane.add(textFieldSetPuerto);
 
-		scrollPaneMessages = new JScrollPane();
-		scrollPaneMessages.setEnabled(false);
-		scrollPaneMessages.setBounds(27, 127, 579, 197);
-		contentPane.add(scrollPaneMessages);
-
 		lblMessage = new JLabel("Message:");
 		lblMessage.setFont(new Font("Tahoma", Font.PLAIN, 12));
 		lblMessage.setBounds(27, 334, 111, 15);
@@ -96,6 +93,14 @@ public class ChatView extends JFrame implements ActionListener {
 		btnSendMessage.setEnabled(false);
 		btnSendMessage.setBounds(495, 358, 111, 36);
 		contentPane.add(btnSendMessage);
+		
+		messageList = new JList<>();
+		messageList.setBounds(27, 129, 579, 193);
+		
+		scrollPaneMessages = new JScrollPane();
+		scrollPaneMessages.setBounds(27, 129, 579, 193);
+		contentPane.add(scrollPaneMessages, BorderLayout.WEST);
+		scrollPaneMessages.add(messageList);
 
 		btnSendMessage.addActionListener(this);
 		btnCreateUser.addActionListener(this);
@@ -122,13 +127,36 @@ public class ChatView extends JFrame implements ActionListener {
 		} else if (e.getSource() == btnSendMessage) {
 			sendMessage();
 		} else if (e.getSource() == btnDisconnect) {
-			
+
 		}
 	}
 
 	public void createUser() {
 		if (ipPortCheck()) {
+			ObjectOutputStream oos;
+			ObjectInputStream ois;
+			boolean full = false;
 			user = new Usuario(textFieldNewUser.getText());
+			try {
+				oos = new ObjectOutputStream(client.getOutputStream());
+				ois = new ObjectInputStream(client.getInputStream());
+				oos.writeObject(user); // Sends user to server so that it can check if array is full
+				full = (boolean) ois.readObject();
+
+				if (!full) {
+					client = new Socket(textFieldSetIP.getText(), Integer.parseInt(textFieldSetPuerto.getText()));
+					thread = new ClientThread(user, client, messageList);
+					thread.start();
+					oos.writeObject(user);
+				} else {
+					JOptionPane.showMessageDialog(this, "No hay espacio para añadir mas usuarios.", "ERROR", JOptionPane.ERROR_MESSAGE);
+				}
+
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -149,12 +177,15 @@ public class ChatView extends JFrame implements ActionListener {
 		}
 		return check;
 	}
-	
+
 	public void sendMessage() {
+		thread.setMessage(textFieldMessage.getText());
 		if (!comboBoxUsers.getSelectedItem().equals("Public")) {
-			ClientThread thread = new ClientThread(user, textFieldMessage.getText(), client);
+			thread.run();
 		} else {
-			ClientThread thread = new ClientThread(user, textFieldMessage.getText(), client);
+			user2 = new Usuario((String) comboBoxUsers.getSelectedItem());
+			thread.setUser2(user2);
+			thread.run();
 		}
 	}
 }
