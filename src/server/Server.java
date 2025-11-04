@@ -9,7 +9,7 @@ import model.Usuario;
 
 public class Server {
 	private final int PUERTO = 5000;
-
+	private CheckTrhead Cthread;
 	public void iniciar() {
 		ArrayList<Usuario> users = new ArrayList<>();
 		Socket cliente = null;
@@ -17,16 +17,20 @@ public class Server {
 		ObjectOutputStream salida = null;
 		boolean active = true;
 		try (ServerSocket servidor = new ServerSocket(PUERTO)) {
+			users.add(new Usuario("Public"));
+			Cthread = new CheckTrhead(users);
+			Cthread.start();
 			while (active) {
-
+				
 				System.out.println("Esperando conexiones del cliente...");
 				try {
 					cliente = servidor.accept();
 					System.out.println("Cliente conectado.");
 					salida = new ObjectOutputStream(cliente.getOutputStream());
 					entrada = new ObjectInputStream(cliente.getInputStream());
-					users.add(new Usuario("Public"));
+					
 					Usuario user = (Usuario) entrada.readObject();
+					
 					if (users.size() < 11) {
 						users.add(user);
 						salida.writeObject(false);
