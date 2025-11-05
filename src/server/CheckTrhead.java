@@ -4,6 +4,7 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 
+import bitacora.GeneraLog;
 import model.Usuario;
 
 public class CheckTrhead extends Thread{
@@ -18,7 +19,7 @@ public class CheckTrhead extends Thread{
 	public void run() {
 		while (true) {
 			try {
-				Thread.sleep(30000);
+				Thread.sleep(10000);
 				
 				activity();
 				
@@ -34,5 +35,6 @@ public class CheckTrhead extends Thread{
 		// TODO Auto-generated method stub
 		String log = " \n Connected clients: "+(users.size()-1);
 		System.out.println(log);
+		//GeneraLog.getLogger().info(log);
 	}
 }

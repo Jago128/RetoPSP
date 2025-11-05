@@ -24,12 +24,12 @@ public class Server {
 				
 				System.out.println("Esperando conexiones del cliente...");
 				try {
+					
 					cliente = servidor.accept();
-					System.out.println("Cliente conectado.");
 					salida = new ObjectOutputStream(cliente.getOutputStream());
 					entrada = new ObjectInputStream(cliente.getInputStream());
-					
 					Usuario user = (Usuario) entrada.readObject();
+					
 					
 					if (users.size() < 11) {
 						users.add(user);
@@ -37,10 +37,17 @@ public class Server {
 					} else {
 						salida.writeObject(true);
 					}
-
+					
+					System.out.println("Cliente "+user.getUsername()+" conectado.");
+					
+					
+					
+					
+					
 					salida.writeObject("Bienvenid@ a usuario [PH]!");
 
 					Mensaje msg = (Mensaje) entrada.readObject();
+					System.out.println("server before");
 					boolean logged = cLIuser(msg, users);
 					if (logged) {
 						salida.writeObject(msg);

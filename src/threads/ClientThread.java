@@ -21,10 +21,12 @@ public class ClientThread implements Runnable {
 
 	@Override
 	public void run() {
-		if (message.getUser2() != null) {
-			publicChat(message);
-		} else {
-			privateChat(message);
+		if (message != null) {
+			if (message.getUser2() != null) {
+				publicChat(message);
+			} else {
+				privateChat(message);
+			}
 		}
 	}
 
@@ -55,11 +57,11 @@ public class ClientThread implements Runnable {
 			while (messages.contains("[PH]")) {
 				messages.removeElement("[PH]");
 			}
-			
+
 			while (messages.contains("[PH]")) {
 				messages.removeElement("[PH]");
 			}
-			
+
 			messages.addElement(message.getMessage());
 			SwingUtilities.invokeLater(() -> messageList.setModel(messages));
 		}
