@@ -70,11 +70,13 @@ public class ClientThread implements Runnable {
 	synchronized void privateChat(Mensaje message) {
 		boolean sent = true;
 		ObjectOutputStream salida;
+		
 		ObjectInputStream entrada;
 		DefaultListModel<String> messages = (DefaultListModel<String>) messageList.getModel();
 
 		try {
 			salida = new ObjectOutputStream(client.getOutputStream());
+			 salida.flush();
 			salida.writeObject(message);
 		} catch (IOException e) {
 			sent = false;

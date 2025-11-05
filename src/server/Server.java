@@ -15,6 +15,7 @@ public class Server {
 		Socket cliente = null;
 		ObjectInputStream entrada = null;
 		ObjectOutputStream salida = null;
+	
 		boolean active = true;
 		try (ServerSocket servidor = new ServerSocket(PUERTO)) {
 			users.add(new Usuario("Public"));
@@ -27,9 +28,11 @@ public class Server {
 					
 					cliente = servidor.accept();
 					salida = new ObjectOutputStream(cliente.getOutputStream());
+					 salida.flush();
 					entrada = new ObjectInputStream(cliente.getInputStream());
 					Usuario user = (Usuario) entrada.readObject();
-					
+					ClientHandler clientHandler = new ClientHandler(cliente, users);
+	                clientHandler.start();
 					
 					if (users.size() < 11) {
 						users.add(user);
@@ -46,28 +49,12 @@ public class Server {
 					
 					salida.writeObject("Bienvenid@ a usuario [PH]!");
 
-					Mensaje msg = (Mensaje) entrada.readObject();
-					System.out.println("server before");
-					boolean logged = cLIuser(msg, users);
-					if (logged) {
-						salida.writeObject(msg);
-						}else {
-						salida.writeObject("ERROR no existe ese usuario");
-					}
+					 System.out.println("Esperando conexiones del cliente...");
+		                
+		                
 				} catch (Exception e) {
 					e.printStackTrace();
-				} finally {
 
-					try {
-						if (entrada != null)
-							entrada.close();
-						if (salida != null)
-							salida.close();
-						if (cliente != null)
-							cliente.close();
-					} catch (Exception e) {
-						System.out.println("Error: " + e.getMessage());
-					}
 				}
 			}
 		} catch (IOException e) {
@@ -75,16 +62,7 @@ public class Server {
 		}
 	}
 
-	private boolean cLIuser(Mensaje msg, ArrayList<Usuario> users) {
-		// TODO Auto-generated method stub
-		boolean itis = false;
-		for (int i = 0; i < users.size(); i++) {
-			if (msg.getUser2().equals(users.get(i))) {
-				itis = true;
-			}
-		}
-		return itis;
-	}
+
 
 	public static void main(String[] args) {
 		Server s = new Server();
