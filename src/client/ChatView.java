@@ -65,7 +65,7 @@ public class ChatView extends JFrame implements ActionListener {
 		lblSetIP.setBounds(293, 85, 15, 15);
 		contentPane.add(lblSetIP);
 
-		textFieldSetIP = new JTextField();
+		textFieldSetIP = new JTextField("127.0.0.1");
 		textFieldSetIP.setColumns(10);
 		textFieldSetIP.setBounds(315, 80, 141, 27);
 		contentPane.add(textFieldSetIP);
@@ -76,6 +76,7 @@ public class ChatView extends JFrame implements ActionListener {
 		contentPane.add(lblSetPuerto);
 
 		textFieldSetPuerto = new JTextField();
+		textFieldSetPuerto.setText("5000");
 		textFieldSetPuerto.setColumns(10);
 		textFieldSetPuerto.setBounds(526, 80, 80, 27);
 		contentPane.add(textFieldSetPuerto);
@@ -103,7 +104,7 @@ public class ChatView extends JFrame implements ActionListener {
 		scrollPaneMessages = new JScrollPane();
 		scrollPaneMessages.setBounds(27, 129, 579, 193);
 		contentPane.add(scrollPaneMessages, BorderLayout.WEST);
-		scrollPaneMessages.add(messageList);
+		scrollPaneMessages.setViewportView(messageList);
 
 		btnSendMessage.addActionListener(this);
 		btnCreateUser.addActionListener(this);
@@ -126,6 +127,7 @@ public class ChatView extends JFrame implements ActionListener {
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getSource() == btnCreateUser) {
+			
 			createUser();
 		} else if (e.getSource() == btnSendMessage) {
 			sendMessage();
@@ -136,50 +138,74 @@ public class ChatView extends JFrame implements ActionListener {
 
 	public void createUser() {
 		if (ipPortCheck()) {
+			
 			ObjectOutputStream oos;
 			ObjectInputStream ois;
 			boolean full = false;
+			
 			user = new Usuario(textFieldNewUser.getText());
+			
 			try {
+				client = new Socket(textFieldSetIP.getText(), Integer.parseInt(textFieldSetPuerto.getText()));
+				thread = new ClientThread(client, messageList);
 				oos = new ObjectOutputStream(client.getOutputStream());
 				ois = new ObjectInputStream(client.getInputStream());
-				oos.writeObject(user); // Sends user to server so that it can check if array is full
+				oos.writeObject(user);
+				
+				// Sends user to server so that it can check if array is full
 				full = (boolean) ois.readObject();
-
+				
 				if (!full) {
-					client = new Socket(textFieldSetIP.getText(), Integer.parseInt(textFieldSetPuerto.getText()));
-					thread = new ClientThread(client, messageList);
+					//client = new Socket(textFieldSetIP.getText(), Integer.parseInt(textFieldSetPuerto.getText()));
+					//thread = new ClientThread(client, messageList);
+					enterMessagemode();
 					thread.start();
 					oos.writeObject(user);
 					// e
 				} else {
+					client.close();
+					
 					JOptionPane.showMessageDialog(this, "No hay espacio para añadir mas usuarios.", "ERROR",
 							JOptionPane.ERROR_MESSAGE);
 				}
 
 			} catch (IOException e) {
-				e.printStackTrace();
+				
+				e.printStackTrace();System.err.println(e.getMessage());
 			} catch (Exception e) {
-				e.printStackTrace();
+				e.printStackTrace();System.err.println(e.getMessage());
 			}
 		}
 	}
 
+	private void enterMessagemode() {
+		textFieldNewUser.setEnabled(false);
+		btnCreateUser.setEnabled(false);
+		textFieldSetIP.setEnabled(false);
+		textFieldSetPuerto.setEnabled(false);
+		comboBoxUsers.setEnabled(true);
+		textFieldMessage.setEnabled(true);
+		btnSendMessage.setEnabled(true);
+		
+	}
+
 	public boolean ipPortCheck() {
 		boolean check = true;
-		Pattern ip = Pattern.compile(
-				"^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$"),
-				port = Pattern.compile(
-						"^([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$");
+		Pattern ip = Pattern.compile("^((0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)\\.){3}(0|1\\d?\\d?|2[0-4]?\\d?|25[0-5]?|[3-9]\\d?)$"),
+				port = Pattern.compile("^([1-9][0-9]{0,3}|[1-5][0-9]{4}|6[0-4][0-9]{3}|65[0-4][0-9]{2}|655[0-2][0-9]|6553[0-5])$");
 		Matcher ipMatcher = ip.matcher(textFieldSetIP.getText());
 		if (!ipMatcher.matches()) {
 			check = false;
+			
 		}
 
-		Matcher portMatcher = port.matcher(textFieldSetIP.getText());
+		Matcher portMatcher = port.matcher(textFieldSetPuerto.getText());
+		
 		if (!portMatcher.matches()) {
 			check = false;
+			
 		}
+		
 		return check;
 	}
 
